@@ -1,0 +1,18 @@
+def Juros():
+    #x = idade atual
+    #y = idade quando retirar o dinheiro
+    #qnt = quantia desejada
+    #val = valor a ser depositado mensalmente
+    #taxa é dada em porcentagem
+
+    x = float(input('Insira a idade atual: '))
+    y = float(input('Insira a idade para retirar o dinheiro: '))
+    qnt = float(input('Insira o valor desejado: '))
+    taxa = float(input('Insira a taxa de juros: '))
+
+    taxa = taxa/100
+    
+    meses = (y-x)*12
+
+    val = (qnt)/((1+taxa)*(((1+taxa)**meses - 1)/taxa))
+    return val
