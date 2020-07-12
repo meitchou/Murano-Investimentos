@@ -13,8 +13,8 @@ def BubbleSort(lista):
 def MergeSort(lista):
     if len(lista)>1:
         meio = len(lista)//2     
-        esquerda = lista[:meio]  #lista do início até o 'meio' (divisão inteira, sem float)
-        direita = lista[meio:]   #lista do 'meio' até o final
+        esquerda = lista[:meio]  
+        direita = lista[meio:]   
 
         MergeSort(direita)   #função recursiva
         MergeSort(esquerda)
@@ -25,8 +25,8 @@ def MergeSort(lista):
         k = 0
 
         while i < len(esquerda) and j < len(direita):
-            if esquerda[i] < direita[j]:  # o menor primeiro elemento entre as duas metades
-                lista[k] = esquerda[i]    # será o primeiro elemento da nova lista
+            if esquerda[i] < direita[j]:  
+                lista[k] = esquerda[i]    
                 i = i+1
             else:
                 lista[k] = direita[j]
