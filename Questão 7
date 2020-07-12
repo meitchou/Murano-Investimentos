@@ -1,0 +1,176 @@
+from tkinter import *
+import pandas as pd
+import os
+
+raiz = Tk()
+raiz.title('Cadastro alunos')
+raiz.geometry('400x400')
+
+#Criar um excel em branco se não existir ainda
+if os.path.isfile('Cadastro.xlsx') == False:
+    writer = pd.ExcelWriter('Cadastro.xlsx', engine='xlsxwriter')
+    writer.save()
+else:
+    pass
+
+# Criar caixas de texto
+DRE = Entry(raiz,width=30)
+DRE.grid(row=0,column=1,padx=20, pady=(10,0))
+
+curso = Entry(raiz,width=30)
+curso.grid(row=1,column=1)
+
+nome = Entry(raiz,width=30)
+nome.grid(row=2,column=1)
+
+genero = Entry(raiz,width=30)
+genero.grid(row=3,column=1)
+
+nascimento = Entry(raiz,width=30)
+nascimento.grid(row=4,column=1)
+
+altura = Entry(raiz,width=30)
+altura.grid(row=5,column=1)
+
+peso = Entry(raiz,width=30)
+peso.grid(row=6,column=1)
+
+CRA = Entry(raiz,width=30)
+CRA.grid(row=7,column=1)
+
+creditos = Entry(raiz,width=30)
+creditos.grid(row=8,column=1)
+
+renda = Entry(raiz,width=30)
+renda.grid(row=9,column=1)
+
+
+
+# Criar os labels das caixas de texto
+DRE_label = Label(raiz, text='DRE')
+DRE_label.grid(row=0,column=0, pady=(10,0))
+
+curso_label = Label(raiz, text='Curso')
+curso_label.grid(row=1,column=0)
+
+nome_label = Label(raiz, text='Nome')
+nome_label.grid(row=2,column=0)
+
+genero_label = Label(raiz, text='Genero (M ou F)')
+genero_label.grid(row=3,column=0)
+
+nascimento_label = Label(raiz, text='Data de nascimento (dd/mm/aaaa)')
+nascimento_label.grid(row=4,column=0)
+
+altura_label = Label(raiz, text='Altura (cm)')
+altura_label.grid(row=5,column=0)
+
+peso_label = Label(raiz, text='Peso (kg)')
+peso_label.grid(row=6,column=0)
+
+CRA_label = Label(raiz, text='CRA')
+CRA_label.grid(row=7,column=0)
+
+creditos_label = Label(raiz, text='Créditos obtidos')
+creditos_label.grid(row=8,column=0)
+
+renda_label = Label(raiz, text='Renda (R$)')
+renda_label.grid(row=9,column=0)
+
+
+## Criar função para inserir as informações quando clicar no botão
+## 'Adicionar Cadastro'
+def submit():
+
+    dre = DRE.get()
+    Curso = curso.get()
+    Nome = nome.get()
+    Genero = genero.get()
+    Nascimento = nascimento.get()
+    Altura = altura.get()
+    Peso = peso.get()
+    cra = CRA.get()
+    Creditos = creditos.get()
+    Renda = renda.get()
+
+    data = {
+        'DRE': dre,
+        'Curso': Curso,
+        'Nome': Nome,
+        'Gênero': Genero,
+        'Nascimento': Nascimento,
+        'Altura': Altura,
+        'Peso': Peso,
+        'CRA': cra,
+        'Créditos obtidos': Creditos,
+        'Renda': Renda
+        }
+
+        
+    df_adicionar = pd.DataFrame([data], columns=['DRE','Curso','Nome','Gênero','Nascimento',
+                                               'Altura','Peso','CRA','Créditos obtidos','Renda'])
+
+
+    # Create a Pandas Excel writer using XlsxWriter as the engine.
+    #writer = pd.ExcelFile('Cadastro.xlsx', engine='xlsxwriter')
+
+    df = pd.read_excel('Cadastro.xlsx')
+
+    df_novo = df.append(df_adicionar)
+
+    df_novo.to_excel('Cadastro.xlsx', index = False)
+
+    ## Limpar caixas de texto ao clicar no botão 'Adicionar cadastro'
+    DRE.delete(0,END)
+    curso.delete(0,END)
+    nome.delete(0,END)
+    genero.delete(0,END)
+    nascimento.delete(0,END)
+    altura.delete(0,END)
+    peso.delete(0,END)
+    CRA.delete(0,END)
+    creditos.delete(0,END)
+    renda.delete(0,END)
+
+
+## Criar função para mostrar estatísticas
+def estatisticas():
+
+    df = pd.read_excel('Cadastro.xlsx')
+
+    #Soma dos valores
+    a = df.sum()
+
+    #Média dos valores
+    b = df.mean()
+    media_CRA = b[2]
+    media_renda = b[4]
+
+    #Número de cadastros
+    num_cadastros = df.shape[0]
+
+    #Quantidade de M ou F
+    contagem = df['Gênero'].value_counts().to_dict()
+    homens = contagem['M']
+    mulheres = contagem['F']
+
+    print_records = ('Média do CRA: ' + str(media_CRA) + '\n' +
+                     'Média da renda: ' + str(media_renda) + '\n' +
+                     'Homens: ' + str(homens) + '\n' +
+                     'Mulheres: ' + str(mulheres))
+        
+    stats_label = Label(raiz, text=print_records)
+    stats_label.grid(row=15,column=0,columnspan=2)
+
+
+## Criar botão de enviar
+botao_submit = Button(raiz,text = 'Adicionar cadastro', command = submit)
+botao_submit.grid(row=10,column=0,columnspan=2,pady=10,padx=10,ipadx=100)
+
+## Criar botão de mostrar estatísticas
+botao_estatisticas = Button(raiz, text='Mostrar estatísticas', command = estatisticas)
+botao_estatisticas.grid(row=12,column=0,columnspan=2,pady=10,padx=10,ipadx=130)
+
+
+##
+raiz.mainloop()
